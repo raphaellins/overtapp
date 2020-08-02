@@ -18,7 +18,7 @@ class _MatchedPageState extends State<MatchedPage> {
             separatorBuilder: (context, index) => Divider(
                   color: Colors.white,
                 ),
-            itemCount: snapshot.data.length,
+            itemCount: snapshot.data == null ? 0 : snapshot.data.length,
             itemBuilder: (context, index) {
               GameDetail gameDetail = snapshot.data[index];
               return gameDetailItem(gameDetail);
@@ -91,7 +91,7 @@ Widget ball(String ballNumber, {matched = false}) {
     decoration: BoxDecoration(
       border: Border.all(),
       color: matched ? Colors.green : Colors.white,
-      borderRadius: BorderRadius.all(Radius.circular(9.9)),
+      borderRadius: BorderRadius.all(Radius.circular(50)),
     ),
     child: new Text(
       "$ballNumber",
