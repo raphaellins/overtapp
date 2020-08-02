@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter/services.dart';
 import 'package:overtapp/screens/AppPage.dart';
 import 'package:overtapp/screens/HomePage.dart';
 
 void main() {
+  SystemChrome.setEnabledSystemUIOverlays([SystemUiOverlay.bottom]);
   runApp(MyApp());
 }
 
@@ -10,6 +13,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      darkTheme: ThemeData.dark(),
       debugShowCheckedModeBanner: false,
       title: 'Overt',
       theme: ThemeData(
@@ -40,7 +44,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
 
     _items = [
       new AppPage(
-          icon: new Icon(Icons.calendar_today),
+          icon: new Icon(Icons.check_box),
           title: new Text(
             'Matched',
             style: TextStyle(color: Colors.white),
@@ -49,7 +53,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
           body: new MatchedPage(),
           vsync: this),
       new AppPage(
-          icon: new Icon(Icons.calendar_today),
+          icon: new Icon(Icons.add_box),
           title: new Text(
             'New Game',
             style: TextStyle(color: Colors.white),
@@ -58,7 +62,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
           body: new Container(),
           vsync: this),
       new AppPage(
-          icon: new Icon(Icons.calendar_today),
+          icon: new Icon(Icons.assignment_turned_in),
           title: new Text(
             'New Draw',
             style: TextStyle(color: Colors.white),
@@ -121,6 +125,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
     );
 
     return Scaffold(
+      backgroundColor: Colors.deepPurple,
       body: new Center(
         child: _buildPageStack(),
       ),
