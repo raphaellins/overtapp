@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-
-import 'api/Proxy.dart';
-import 'models/GameDetail.dart';
+import 'package:overtapp/screens/AppPage.dart';
+import 'package:overtapp/screens/HomePage.dart';
 
 void main() {
   runApp(MyApp());
@@ -31,96 +30,107 @@ class MyHomePage extends StatefulWidget {
   _MyHomePageState createState() => _MyHomePageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
+class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
+  List<AppPage> _items;
+  int _currentIndex = 0;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _items = [
+      new AppPage(
+          icon: new Icon(Icons.calendar_today),
+          title: new Text(
+            'Matched',
+            style: TextStyle(color: Colors.white),
+          ),
+          color: Color.fromRGBO(26, 26, 25, 1),
+          body: new MatchedPage(),
+          vsync: this),
+      new AppPage(
+          icon: new Icon(Icons.calendar_today),
+          title: new Text(
+            'New Game',
+            style: TextStyle(color: Colors.white),
+          ),
+          color: Color.fromRGBO(26, 26, 25, 1),
+          body: new Container(),
+          vsync: this),
+      new AppPage(
+          icon: new Icon(Icons.calendar_today),
+          title: new Text(
+            'New Draw',
+            style: TextStyle(color: Colors.white),
+          ),
+          color: Color.fromRGBO(26, 26, 25, 1),
+          body: new Container(),
+          vsync: this),
+    ];
+
+    for (AppPage view in _items) {
+      view.controller.addListener(_rebuild);
+    }
+
+    _items[_currentIndex].controller.value = 1.0;
+  }
+
+  void _rebuild() {
+    setState(() {});
+  }
+
+  Widget _buildPageStack() {
+    final List<Widget> transitions = <Widget>[];
+
+    for (int i = 0; i < _items.length; i++) {
+      transitions.add(IgnorePointer(
+          ignoring: _currentIndex != i,
+          child: _items[i].buildTransition(context)));
+    }
+    return new Stack(children: transitions);
+  }
+
+  @override
+  void dispose() {
+    for (AppPage page in _items) {
+      page.controller.dispose();
+    }
+
+    super.dispose();
+  }
+
+  void moveScreen(int pageIndex) {
+    setState(() {
+      _items[_currentIndex].controller.reverse();
+      _currentIndex = pageIndex;
+      _items[_currentIndex].controller.forward();
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
+    final BottomNavigationBar navBar = new BottomNavigationBar(
+      items: _items.map((page) {
+        return page.item;
+      }).toList(),
+      currentIndex: _currentIndex,
+      type: BottomNavigationBarType.shifting,
+      onTap: (pageIndex) {
+        moveScreen(pageIndex);
+      },
+    );
+
     return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
+      body: new Center(
+        child: _buildPageStack(),
       ),
-      body: Container(
-        margin: EdgeInsets.only(left: 5, right: 5, top: 5, bottom: 5),
-        child: FutureBuilder(
-          future: Proxy().getGames(),
-          builder: (context, snapshot) => ListView.separated(
-              separatorBuilder: (context, index) => Divider(
-                    color: Colors.white,
-                  ),
-              itemCount: snapshot.data.length,
-              itemBuilder: (context, index) {
-                GameDetail gameDetail = snapshot.data[index];
-                return gameDetailItem(gameDetail);
-              }),
-        ),
+      bottomNavigationBar: new Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
+          Material(child: navBar),
+        ],
       ),
     );
   }
-}
-
-Widget gameDetailItem(GameDetail gameDetail) {
-  return Container(
-    padding: const EdgeInsets.only(left: 8, right: 8, top: 5),
-    decoration: BoxDecoration(
-      border: Border.all(),
-      color: Colors.white,
-      borderRadius: BorderRadius.all(Radius.circular(5.0)),
-    ),
-    height: 95,
-    child: Column(
-      children: <Widget>[
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: <Widget>[
-            Text(gameDetail.gameNumber),
-            Text(gameDetail.gameDescription == null
-                ? ""
-                : gameDetail.gameDescription),
-            Text(gameDetail.countMatched.toString())
-          ],
-        ),
-        Divider(
-          color: Colors.black87,
-        ),
-        playedBalls(gameDetail.numbersPlayed),
-        SizedBox(
-          height: 5,
-        ),
-        sortedBalls(gameDetail.numbersDrawn)
-      ],
-    ),
-  );
-}
-
-Widget playedBalls(List<String> ballsPlayed) {
-  List<Widget> balls = new List<Widget>();
-  for (var i = 0; i < ballsPlayed.length; i++) {
-    balls.add(ball(ballsPlayed[i]));
-  }
-
-  return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween, children: balls);
-}
-
-Widget sortedBalls(List<String> ballsSorted) {
-  List<Widget> balls = new List<Widget>();
-  for (var i = 0; i < ballsSorted.length; i++) {
-    balls.add(ball(ballsSorted[i]));
-  }
-
-  return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween, children: balls);
-}
-
-Widget ball(String ballNumber) {
-  return Container(
-    padding: const EdgeInsets.all(2),
-    decoration: BoxDecoration(
-      border: Border.all(),
-      color: Colors.white,
-      borderRadius: BorderRadius.all(Radius.circular(9.9)),
-    ),
-    child: new Text(
-      "$ballNumber",
-    ),
-  );
 }
