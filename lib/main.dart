@@ -30,14 +30,6 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -49,12 +41,13 @@ class _MyHomePageState extends State<MyHomePage> {
           padding: const EdgeInsets.all(8),
           children: <Widget>[
             Container(
+              padding: const EdgeInsets.only(left: 8, right: 8, top: 5),
               decoration: BoxDecoration(
                 border: Border.all(),
                 color: Colors.white,
                 borderRadius: BorderRadius.all(Radius.circular(5.0)),
               ),
-              height: 70,
+              height: 95,
               child: Column(
                 children: <Widget>[
                   Row(
@@ -65,6 +58,9 @@ class _MyHomePageState extends State<MyHomePage> {
                     color: Colors.black87,
                   ),
                   playedBalls(),
+                  SizedBox(
+                    height: 5,
+                  ),
                   sortedBalls()
                 ],
               ),
@@ -80,7 +76,7 @@ Widget playedBalls() {
   List<Widget> balls = new List<Widget>();
   for (var i = 0; i < 15; i++) {
     String ballNumber = NumberUtils().formatBallNumber(i);
-    balls.add(new Text("$ballNumber"));
+    balls.add(ball(ballNumber));
   }
 
   return Row(
@@ -91,9 +87,23 @@ Widget sortedBalls() {
   List<Widget> balls = new List<Widget>();
   for (var i = 0; i < 15; i++) {
     String ballNumber = NumberUtils().formatBallNumber(i);
-    balls.add(new Text("$ballNumber"));
+    balls.add(ball(ballNumber));
   }
 
   return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween, children: balls);
+}
+
+Widget ball(String ballNumber) {
+  return Container(
+    padding: const EdgeInsets.all(2),
+    decoration: BoxDecoration(
+      border: Border.all(),
+      color: Colors.white,
+      borderRadius: BorderRadius.all(Radius.circular(9.9)),
+    ),
+    child: new Text(
+      "$ballNumber",
+    ),
+  );
 }
