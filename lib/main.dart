@@ -6,7 +6,7 @@ import 'package:overtapp/screens/GamePage.dart';
 import 'package:overtapp/screens/MatchedPage.dart';
 
 void main() {
-  SystemChrome.setEnabledSystemUIOverlays([SystemUiOverlay.bottom]);
+  // SystemChrome.setEnabledSystemUIOverlays([SystemUiOverlay.bottom]);
   runApp(MyApp());
 }
 

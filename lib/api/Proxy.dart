@@ -15,8 +15,6 @@ class Proxy {
     var response = await http
         .get(finalUrl, headers: {HttpHeaders.authorizationHeader: bearer});
 
-    print(response.statusCode);
-
     final responseJson = json.decode(response.body);
 
     List<GameDetail> gamesDetail = new List<GameDetail>();
