@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:overtapp/api/Proxy.dart';
 import 'package:overtapp/elements/Ball.dart';
+import 'package:overtapp/models/NewGame.dart';
 import 'package:overtapp/utils/NumberUtils.dart';
 
 class GamePage extends StatefulWidget {
@@ -21,8 +23,72 @@ class _GamePageState extends State<GamePage> {
       }
       numberSelectedCount = numbersSelected.length;
 
-      message = "$numberSelectedCount numbers selected";
+      _changeMessage("$numberSelectedCount numbers selected");
     });
+  }
+
+  TextEditingController initialGameController = new TextEditingController();
+  TextEditingController finalGameController = new TextEditingController();
+  TextEditingController descriptionGameController = new TextEditingController();
+
+  _onFormSubmit() {
+    FocusScope.of(context).unfocus();
+    NewGame newGame = new NewGame(initialGameController.text,
+        finalGameController.text, descriptionGameController.text);
+
+    if (newGame.initialGameNumber.isEmpty) {
+      _changeMessage("Initial Game Number is required");
+      return;
+    } else if (int.tryParse(newGame.initialGameNumber) == null) {
+      _changeMessage("Initial Game Number is invalid");
+      return;
+    }
+
+    if (newGame.finalGameNumber.isEmpty) {
+      _changeMessage("Final Game Number is required");
+      return;
+    } else if (int.tryParse(newGame.finalGameNumber) == null) {
+      _changeMessage("Final Game Number is invalid");
+      return;
+    }
+
+    if (int.parse(newGame.initialGameNumber) >
+        int.parse(newGame.finalGameNumber)) {
+      _changeMessage("The Final Number must be less than Initial Game Number");
+      return;
+    }
+
+    if (newGame.descriptionGame.isEmpty) {
+      _changeMessage("Description Game with 30 characters max is required");
+      return;
+    }
+
+    if (numberSelectedCount < 15) {
+      _changeMessage("15 game numbers is required");
+      return;
+    }
+
+    new Proxy().saveNewGame(newGame);
+
+    _changeMessage("");
+    _clearControllers();
+  }
+
+  _changeMessage(String newMessage) {
+    setState(() {
+      message = newMessage;
+    });
+  }
+
+  _clearControllers() {
+    initialGameController.clear();
+    finalGameController.clear();
+    descriptionGameController.clear();
+
+    // setState(() {
+    //   numberSelectedCount = 0;
+    //   numbersSelected.clear();
+    // });
   }
 
   @override
@@ -30,9 +96,7 @@ class _GamePageState extends State<GamePage> {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          // Add your onPressed code here!
-        },
+        onPressed: _onFormSubmit,
         child: Icon(Icons.check),
         backgroundColor: Colors.deepPurpleAccent,
       ),
@@ -45,12 +109,20 @@ class _GamePageState extends State<GamePage> {
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
               TextField(
+                maxLength: 5,
+                keyboardType: TextInputType.number,
+                controller: initialGameController,
                 decoration: InputDecoration(hintText: "Initial Game Number"),
               ),
               TextField(
+                maxLength: 5,
+                keyboardType: TextInputType.number,
+                controller: finalGameController,
                 decoration: InputDecoration(hintText: "Final Game Number"),
               ),
               TextField(
+                maxLength: 15,
+                controller: descriptionGameController,
                 decoration: InputDecoration(hintText: "Game Description"),
               ),
               SizedBox(
