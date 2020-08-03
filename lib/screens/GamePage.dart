@@ -33,8 +33,11 @@ class _GamePageState extends State<GamePage> {
 
   _onFormSubmit() {
     FocusScope.of(context).unfocus();
-    NewGame newGame = new NewGame(initialGameController.text,
-        finalGameController.text, descriptionGameController.text);
+    NewGame newGame = new NewGame(
+        initialGameController.text,
+        finalGameController.text,
+        descriptionGameController.text,
+        numbersSelected);
 
     if (newGame.initialGameNumber.isEmpty) {
       _changeMessage("Initial Game Number is required");
