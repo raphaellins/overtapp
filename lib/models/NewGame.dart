@@ -4,12 +4,12 @@ part 'NewGame.g.dart';
 
 @JsonSerializable()
 class NewGame {
-  String initialGameNumber;
-  String finalGameNumber;
-  String descriptionGame;
-  List<String> numbersPlayed;
+  final String initialGameNumber;
+  final String finalGameNumber;
+  final String gameDescription;
+  final List<String> numbersPlayed;
 
-  NewGame(this.initialGameNumber, this.finalGameNumber, this.descriptionGame,
+  NewGame(this.initialGameNumber, this.finalGameNumber, this.gameDescription,
       this.numbersPlayed);
 
   factory NewGame.fromJson(Map<String, dynamic> json) =>

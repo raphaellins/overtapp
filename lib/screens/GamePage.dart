@@ -61,7 +61,7 @@ class _GamePageState extends State<GamePage> {
       return;
     }
 
-    if (newGame.descriptionGame.isEmpty) {
+    if (newGame.gameDescription.isEmpty) {
       _changeMessage("Description Game with 30 characters max is required");
       return;
     }
