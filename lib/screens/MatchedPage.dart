@@ -8,22 +8,38 @@ class MatchedPage extends StatefulWidget {
 }
 
 class _MatchedPageState extends State<MatchedPage> {
+  List<GameDetail> _games;
+
+  @override
+  void initState() {
+    super.initState();
+    _retrieveData();
+  }
+
+  Future<void> _retrieveData() async {
+    List<GameDetail> responseGames = await new Proxy().getGames();
+
+    print("${responseGames.length} COUNT");
+    setState(() {
+      _games = responseGames;
+    });
+
+    return;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
       margin: EdgeInsets.only(left: 5, right: 5, top: 5, bottom: 5),
-      child: FutureBuilder(
-        future: Proxy().getGames(),
-        builder: (context, snapshot) => ListView.separated(
-            separatorBuilder: (context, index) => Divider(
-                  color: Colors.white,
-                ),
-            itemCount: snapshot.data == null ? 0 : snapshot.data.length,
+      child: RefreshIndicator(
+          child: ListView.builder(
+            itemCount: _games == null ? 0 : _games.length,
             itemBuilder: (context, index) {
-              GameDetail gameDetail = snapshot.data[index];
+              GameDetail gameDetail = _games[index];
               return gameDetailItem(gameDetail);
-            }),
-      ),
+            },
+          ),
+          onRefresh: _retrieveData),
     );
   }
 }

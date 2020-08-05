@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/services.dart';
 import 'package:overtapp/screens/AppPage.dart';
+import 'package:overtapp/screens/DrawPage.dart';
 import 'package:overtapp/screens/GamePage.dart';
 import 'package:overtapp/screens/MatchedPage.dart';
 
@@ -69,7 +70,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
             style: TextStyle(color: Colors.white),
           ),
           color: Color.fromRGBO(26, 26, 25, 1),
-          body: new Container(),
+          body: new DrawPage(),
           vsync: this),
     ];
 
