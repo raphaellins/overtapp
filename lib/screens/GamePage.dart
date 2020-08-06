@@ -31,7 +31,7 @@ class _GamePageState extends State<GamePage> {
   TextEditingController finalGameController = new TextEditingController();
   TextEditingController descriptionGameController = new TextEditingController();
 
-  _onFormSubmit() {
+  _onFormSubmit() async {
     FocusScope.of(context).unfocus();
     NewGame newGame = new NewGame(
         initialGameController.text,
@@ -71,10 +71,16 @@ class _GamePageState extends State<GamePage> {
       return;
     }
 
-    new Proxy().saveNewGame(newGame);
+    bool result = await new Proxy().saveNewGame(newGame);
 
-    _changeMessage("");
-    _clearControllers();
+    if (result) {
+      _changeMessage("");
+      _clearControllers();
+    } else {
+      setState(() {
+        _changeMessage("Ocorreu um erro!");
+      });
+    }
   }
 
   _changeMessage(String newMessage) {
@@ -99,7 +105,9 @@ class _GamePageState extends State<GamePage> {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       floatingActionButton: FloatingActionButton(
-        onPressed: _onFormSubmit,
+        onPressed: () {
+          _onFormSubmit();
+        },
         child: Icon(Icons.check),
         backgroundColor: Colors.deepPurpleAccent,
       ),

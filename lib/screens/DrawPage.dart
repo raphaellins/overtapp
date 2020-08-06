@@ -1,4 +1,6 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:overtapp/api/Proxy.dart';
 import 'package:overtapp/elements/Ball.dart';
 import 'package:overtapp/models/NewGame.dart';
@@ -28,14 +30,14 @@ class _DrawPageState extends State<DrawPage> {
   }
 
   TextEditingController initialGameController = new TextEditingController();
-  TextEditingController finalGameController = new TextEditingController();
+  TextEditingController gameDateController = new TextEditingController();
   TextEditingController descriptionGameController = new TextEditingController();
 
   _onFormSubmit() {
     FocusScope.of(context).unfocus();
     NewGame newGame = new NewGame(
         initialGameController.text,
-        finalGameController.text,
+        gameDateController.text,
         descriptionGameController.text,
         numbersSelected);
 
@@ -85,13 +87,19 @@ class _DrawPageState extends State<DrawPage> {
 
   _clearControllers() {
     initialGameController.clear();
-    finalGameController.clear();
+    gameDateController.clear();
     descriptionGameController.clear();
 
     // setState(() {
     //   numberSelectedCount = 0;
     //   numbersSelected.clear();
     // });
+  }
+
+  _onDateChange(String newDate) {
+    setState(() {
+      gameDateController.text = newDate;
+    });
   }
 
   @override
@@ -116,6 +124,14 @@ class _DrawPageState extends State<DrawPage> {
                 keyboardType: TextInputType.number,
                 controller: initialGameController,
                 decoration: InputDecoration(hintText: "Draw Game Number"),
+              ),
+              TextField(
+                readOnly: true,
+                onTap: () {
+                  showDialog(context, _onDateChange);
+                },
+                controller: gameDateController,
+                decoration: InputDecoration(hintText: "Game Date"),
               ),
               SizedBox(
                 height: 70,
@@ -158,6 +174,18 @@ class _DrawPageState extends State<DrawPage> {
   }
 }
 
+Widget openDataPicker(Function onDateChange) {
+  return CupertinoDatePicker(
+    mode: CupertinoDatePickerMode.date,
+    initialDateTime: DateTime.now(),
+    onDateTimeChanged: (DateTime newDateTime) {
+      onDateChange(DateFormat('dd/MM/yyyy').format(newDateTime));
+    },
+    use24hFormat: false,
+    minuteInterval: 1,
+  );
+}
+
 Widget createCard(int initialNumber, int endNumber, Function onNumberTap,
     int numberSelectedCount) {
   return Row(
@@ -176,4 +204,35 @@ List<Widget> ballRow(int initialNumber, int endNumber, Function onNumberTap,
     balls.add(Ball(ballNumber, onNumberTap, numberSelectedCount));
   }
   return balls;
+}
+
+void showDialog(BuildContext context, Function onDateChange) {
+  showGeneralDialog(
+    barrierLabel: "Barrier",
+    barrierDismissible: true,
+    barrierColor: Colors.black.withOpacity(0.5),
+    transitionDuration: Duration(milliseconds: 300),
+    context: context,
+    pageBuilder: (_, __, ___) {
+      return Align(
+        alignment: Alignment.bottomCenter,
+        child: Container(
+          height: 300,
+          child: openDataPicker(onDateChange),
+          margin: EdgeInsets.only(bottom: 1, left: 1, right: 1),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(40), topRight: Radius.circular(40)),
+          ),
+        ),
+      );
+    },
+    transitionBuilder: (_, anim, __, child) {
+      return SlideTransition(
+        position: Tween(begin: Offset(0, 1), end: Offset(0, 0)).animate(anim),
+        child: child,
+      );
+    },
+  );
 }
