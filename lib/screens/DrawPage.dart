@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:overtapp/api/Proxy.dart';
 import 'package:overtapp/elements/Ball.dart';
+import 'package:overtapp/models/NewDraw.dart';
 import 'package:overtapp/models/NewGame.dart';
 import 'package:overtapp/utils/NumberUtils.dart';
 
@@ -29,42 +30,24 @@ class _DrawPageState extends State<DrawPage> {
     });
   }
 
-  TextEditingController initialGameController = new TextEditingController();
+  TextEditingController drawNumberController = new TextEditingController();
   TextEditingController gameDateController = new TextEditingController();
-  TextEditingController descriptionGameController = new TextEditingController();
 
-  _onFormSubmit() {
+  _onFormSubmit() async {
     FocusScope.of(context).unfocus();
-    NewGame newGame = new NewGame(
-        initialGameController.text,
-        gameDateController.text,
-        descriptionGameController.text,
-        numbersSelected);
+    NewDraw newDraw = new NewDraw(
+        drawNumberController.text, gameDateController.text, numbersSelected);
 
-    if (newGame.initialGameNumber.isEmpty) {
-      _changeMessage("Initial Game Number is required");
+    if (newDraw.drawNumber.isEmpty) {
+      _changeMessage("Draw Number is required");
       return;
-    } else if (int.tryParse(newGame.initialGameNumber) == null) {
-      _changeMessage("Initial Game Number is invalid");
+    } else if (int.tryParse(newDraw.drawNumber) == null) {
+      _changeMessage("Draw Number is invalid");
       return;
     }
 
-    if (newGame.finalGameNumber.isEmpty) {
-      _changeMessage("Final Game Number is required");
-      return;
-    } else if (int.tryParse(newGame.finalGameNumber) == null) {
-      _changeMessage("Final Game Number is invalid");
-      return;
-    }
-
-    if (int.parse(newGame.initialGameNumber) >
-        int.parse(newGame.finalGameNumber)) {
-      _changeMessage("The Final Number must be less than Initial Game Number");
-      return;
-    }
-
-    if (newGame.gameDescription.isEmpty) {
-      _changeMessage("Description Game with 30 characters max is required");
+    if (newDraw == null) {
+      _changeMessage("The Draw date is required");
       return;
     }
 
@@ -73,10 +56,16 @@ class _DrawPageState extends State<DrawPage> {
       return;
     }
 
-    new Proxy().saveNewGame(newGame);
+    bool result = await new Proxy().saveNewDraw(newDraw);
 
-    _changeMessage("");
-    _clearControllers();
+    if (result) {
+      _changeMessage("");
+      _clearControllers();
+    } else {
+      setState(() {
+        _changeMessage("Ocorreu um erro!");
+      });
+    }
   }
 
   _changeMessage(String newMessage) {
@@ -86,9 +75,8 @@ class _DrawPageState extends State<DrawPage> {
   }
 
   _clearControllers() {
-    initialGameController.clear();
+    drawNumberController.clear();
     gameDateController.clear();
-    descriptionGameController.clear();
 
     // setState(() {
     //   numberSelectedCount = 0;
@@ -122,7 +110,7 @@ class _DrawPageState extends State<DrawPage> {
               TextField(
                 maxLength: 5,
                 keyboardType: TextInputType.number,
-                controller: initialGameController,
+                controller: drawNumberController,
                 decoration: InputDecoration(hintText: "Draw Game Number"),
               ),
               TextField(

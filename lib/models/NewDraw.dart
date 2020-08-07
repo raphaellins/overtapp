@@ -5,10 +5,10 @@ part 'NewDraw.g.dart';
 @JsonSerializable()
 class NewDraw {
   String drawNumber;
-  String numbersDrawn;
-  DateTime drawDate;
+  List<String> numbersDrawn;
+  String drawDate;
 
-  NewDraw(this.drawNumber, this.numbersDrawn, this.drawDate);
+  NewDraw(this.drawNumber, this.drawDate, this.numbersDrawn);
 
   factory NewDraw.fromJson(Map<String, dynamic> json) =>
       _$NewDrawFromJson(json);

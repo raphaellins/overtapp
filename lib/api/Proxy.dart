@@ -4,11 +4,12 @@ import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:json_string/json_string.dart';
 import 'package:overtapp/models/GameDetail.dart';
+import 'package:overtapp/models/NewDraw.dart';
 import 'package:overtapp/models/NewGame.dart';
 
 class Proxy {
   var bearer =
-      "Bearer eyJhbGciOiJSUzI1NiIsImtpZCI6ImFmMDg2ZmE4Y2Q5NDFlMDY3ZTc3NzNkYmIwNDcxMjAxMTBlMDA1NGEiLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJodHRwczovL3NlY3VyZXRva2VuLmdvb2dsZS5jb20vb3ZlcnRsaXRlIiwiYXVkIjoib3ZlcnRsaXRlIiwiYXV0aF90aW1lIjoxNTk2NzUwNjU4LCJ1c2VyX2lkIjoibFZ2OW0yZFBlZFFDOHFkeWE5S0xJY1dPUnJLMiIsInN1YiI6ImxWdjltMmRQZWRRQzhxZHlhOUtMSWNXT1JySzIiLCJpYXQiOjE1OTY3NTA2NTgsImV4cCI6MTU5Njc1NDI1OCwiZW1haWwiOiJyYXBoYWxpbm5zQGdtYWlsLmNvbSIsImVtYWlsX3ZlcmlmaWVkIjpmYWxzZSwiZmlyZWJhc2UiOnsiaWRlbnRpdGllcyI6eyJlbWFpbCI6WyJyYXBoYWxpbm5zQGdtYWlsLmNvbSJdfSwic2lnbl9pbl9wcm92aWRlciI6InBhc3N3b3JkIn19.VeaYOhQWy2Pb5-cc1hCxTvNGSn7cWyQ1LvDqhbfa39zoDfbCBBKdKzbGMSfPUTp2vGOlhMZE2WqBUS65djHKKeYQanOMuUNW2q374PBcS_msZoHJRLheKr0l_W9339ZCcK0WfKdu1oNJ4YKTCX_MP5A9iKfjDLQaku5DiomVrF35IGIEFjYSQUIVY3Xs213a5VZEcM4aEghpIsUjd5TGvOfBjSPaSdITJ-pyV9AIpJp38sv1dhN3_1SFvd82Pbnsh_TbO_G734Nm3u3et3dMlml6Tsln4eKsYEQ17ja1YqpFNBnxZ_BO9NmQIzlG5elqD2F-W0Uxrc0sVLTQSzmqjA";
+      "Bearer eyJhbGciOiJSUzI1NiIsImtpZCI6ImFmMDg2ZmE4Y2Q5NDFlMDY3ZTc3NzNkYmIwNDcxMjAxMTBlMDA1NGEiLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJodHRwczovL3NlY3VyZXRva2VuLmdvb2dsZS5jb20vb3ZlcnRsaXRlIiwiYXVkIjoib3ZlcnRsaXRlIiwiYXV0aF90aW1lIjoxNTk2ODM2ODIxLCJ1c2VyX2lkIjoibFZ2OW0yZFBlZFFDOHFkeWE5S0xJY1dPUnJLMiIsInN1YiI6ImxWdjltMmRQZWRRQzhxZHlhOUtMSWNXT1JySzIiLCJpYXQiOjE1OTY4MzY4MjEsImV4cCI6MTU5Njg0MDQyMSwiZW1haWwiOiJyYXBoYWxpbm5zQGdtYWlsLmNvbSIsImVtYWlsX3ZlcmlmaWVkIjpmYWxzZSwiZmlyZWJhc2UiOnsiaWRlbnRpdGllcyI6eyJlbWFpbCI6WyJyYXBoYWxpbm5zQGdtYWlsLmNvbSJdfSwic2lnbl9pbl9wcm92aWRlciI6InBhc3N3b3JkIn19.R4wUtIPWbEf_D_a2b3nZhsO15e6nU4cqf2AZA5Hm7hSRHGJ1WYORLtVyPEi1G67twyJy5k54-0RxyDwuQRMnNKmmpGj2kHZOWu77kRnFjct9-tMMpEdJe-n_D4ygZpT0cbvfR3sznNwb-iG3rAQFqFPbFfUQYSFW8vdDtIelnNehz6-loApYUVqnO8HrUKFMv5jYzUyos5NmiNWmNsb77dXGPP1a0pItBuZSVWDlj-_VG9_6MTfulH9JpuiVgW5o0CF0JgZATt_CXBYzQ1JnDJKiCFhF6fpWgwUm9HdGAnNdP9dXHtWiExigY3vIzULOamKBWUzZzKYdF3ro31T4Hg";
   var url = 'https://us-central1-overtlite.cloudfunctions.net/api/';
 
   Future<List<GameDetail>> getGames() async {
@@ -42,18 +43,15 @@ class Proxy {
     return response.statusCode == 200;
   }
 
-  saveNewDraw(NewGame newGame, Function onFinish) {
-    var finalUrl = url + "new-game";
+  Future<bool> saveNewDraw(NewDraw newDraw) async {
+    var finalUrl = url + "new-draw";
+    var requestData = json.encode(newDraw);
 
-    JsonString requestData = JsonString.encodeObject(newGame);
-
-    print(requestData.toString());
-
-    http.post(finalUrl, body: requestData, headers: {
+    var response = await http.post(finalUrl, body: requestData, headers: {
       HttpHeaders.authorizationHeader: bearer,
-      HttpHeaders.contentTypeHeader: "application/json"
-    }).then((value) {
-      onFinish(value.statusCode == 200);
+      HttpHeaders.contentTypeHeader: "application/json; charset=utf-8"
     });
+
+    return response.statusCode == 200;
   }
 }

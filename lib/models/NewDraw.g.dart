@@ -9,15 +9,13 @@ part of 'NewDraw.dart';
 NewDraw _$NewDrawFromJson(Map<String, dynamic> json) {
   return NewDraw(
     json['drawNumber'] as String,
-    json['numbersDrawn'] as String,
-    json['drawDate'] == null
-        ? null
-        : DateTime.parse(json['drawDate'] as String),
+    json['drawDate'] as String,
+    (json['numbersDrawn'] as List)?.map((e) => e as String)?.toList(),
   );
 }
 
 Map<String, dynamic> _$NewDrawToJson(NewDraw instance) => <String, dynamic>{
       'drawNumber': instance.drawNumber,
       'numbersDrawn': instance.numbersDrawn,
-      'drawDate': instance.drawDate?.toIso8601String(),
+      'drawDate': instance.drawDate,
     };
