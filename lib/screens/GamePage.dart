@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:overtapp/api/Proxy.dart';
+import 'package:overtapp/controller/BallController.dart';
 import 'package:overtapp/elements/Ball.dart';
 import 'package:overtapp/models/NewGame.dart';
 import 'package:overtapp/utils/NumberUtils.dart';
@@ -13,6 +14,8 @@ class _GamePageState extends State<GamePage> {
   int numberSelectedCount = 0;
   String message = "";
   List<String> numbersSelected = new List<String>();
+
+  BallController ballController = new BallController();
 
   _onNumberTap(String ballNumber, bool selected) {
     setState(() {
@@ -72,6 +75,8 @@ class _GamePageState extends State<GamePage> {
     }
 
     bool result = await new Proxy().saveNewGame(newGame);
+
+    ballController.disable();
 
     if (result) {
       _changeMessage("");
@@ -139,6 +144,11 @@ class _GamePageState extends State<GamePage> {
               SizedBox(
                 height: 70,
               ),
+              StreamBuilder(
+                  stream: ballController.counterObservable,
+                  builder: (context, AsyncSnapshot<bool> snapshot) {
+                    return Text('${snapshot.data}');
+                  }),
               Container(
                 child: Column(
                   children: <Widget>[
