@@ -32,7 +32,11 @@ class _MatchedPageState extends State<MatchedPage> {
     return Container(
       margin: EdgeInsets.only(left: 5, right: 5, top: 5, bottom: 5),
       child: RefreshIndicator(
-          child: ListView.builder(
+          child: ListView.separated(
+            separatorBuilder: (context, index) => Divider(
+              color: Colors.transparent,
+              height: 5,
+            ),
             itemCount: _games == null ? 0 : _games.length,
             itemBuilder: (context, index) {
               GameDetail gameDetail = _games[index];
