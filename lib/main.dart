@@ -1,13 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:overtapp/api/Auth.dart';
 import 'package:overtapp/screens/AppPage.dart';
 import 'package:overtapp/screens/DrawPage.dart';
 import 'package:overtapp/screens/GamePage.dart';
+import 'package:overtapp/screens/LoginPage.dart';
 import 'package:overtapp/screens/MatchedPage.dart';
+import 'package:provider/provider.dart';
 
-void main() {
-  // SystemChrome.setEnabledSystemUIOverlays([SystemUiOverlay.bottom]);
-  runApp(MyApp());
-}
+void main() => runApp(ChangeNotifierProvider<AuthService>(
+    child: MyApp(),
+    builder: (BuildContext context) {
+      print("===> Auth service Provider");
+      return AuthService();
+    }));
 
 class MyApp extends StatelessWidget {
   @override
@@ -20,7 +25,22 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: MyHomePage(title: 'Overt'),
+      home: FutureBuilder<UserState>(
+        future: Provider.of<AuthService>(context).getUser(),
+        builder: (context, AsyncSnapshot<UserState> snapshot) {
+          if (snapshot.hasData) {
+            if (snapshot.data.userState == UserStateEnum.LOGGED) {
+              return MyHomePage(title: 'Overt');
+            } else if (snapshot.data.userState == UserStateEnum.EMPTY) {
+              return LoginPage();
+            } else {
+              return LoadingCircle();
+            }
+          } else {
+            return LoadingCircle();
+          }
+        },
+      ),
     );
   }
 }
@@ -135,6 +155,18 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
         children: <Widget>[
           Material(child: navBar),
         ],
+      ),
+    );
+  }
+}
+
+class LoadingCircle extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Container(
+        child: CircularProgressIndicator(),
+        alignment: Alignment(0.0, 0.0),
       ),
     );
   }

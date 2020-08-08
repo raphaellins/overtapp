@@ -40,6 +40,8 @@ dev_dependencies:
   build_runner: ^1.0.0
   rxdart: ^0.24.1
   observable: ^0.22.2
+  provider: ^2.0.1
+  shared_preferences: ^0.5.8
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 
