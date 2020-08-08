@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:overtapp/api/Proxy.dart';
+import 'package:overtapp/controller/BallController.dart';
 import 'package:overtapp/elements/Ball.dart';
 import 'package:overtapp/models/NewDraw.dart';
 import 'package:overtapp/models/NewGame.dart';
@@ -16,6 +17,8 @@ class _DrawPageState extends State<DrawPage> {
   int numberSelectedCount = 0;
   String message = "";
   List<String> numbersSelected = new List<String>();
+
+  BallController ballController = new BallController();
 
   _onNumberTap(String ballNumber, bool selected) {
     setState(() {
@@ -78,10 +81,9 @@ class _DrawPageState extends State<DrawPage> {
     drawNumberController.clear();
     gameDateController.clear();
 
-    // setState(() {
-    //   numberSelectedCount = 0;
-    //   numbersSelected.clear();
-    // });
+    ballController.reset();
+    numberSelectedCount = 0;
+    numbersSelected.clear();
   }
 
   _onDateChange(String newDate) {
@@ -127,23 +129,28 @@ class _DrawPageState extends State<DrawPage> {
               Container(
                 child: Column(
                   children: <Widget>[
-                    createCard(1, 5, _onNumberTap, numberSelectedCount),
+                    createCard(1, 5, _onNumberTap, numberSelectedCount,
+                        ballController),
                     SizedBox(
                       height: 5,
                     ),
-                    createCard(6, 10, _onNumberTap, numberSelectedCount),
+                    createCard(6, 10, _onNumberTap, numberSelectedCount,
+                        ballController),
                     SizedBox(
                       height: 5,
                     ),
-                    createCard(11, 15, _onNumberTap, numberSelectedCount),
+                    createCard(11, 15, _onNumberTap, numberSelectedCount,
+                        ballController),
                     SizedBox(
                       height: 5,
                     ),
-                    createCard(16, 20, _onNumberTap, numberSelectedCount),
+                    createCard(16, 20, _onNumberTap, numberSelectedCount,
+                        ballController),
                     SizedBox(
                       height: 5,
                     ),
-                    createCard(21, 25, _onNumberTap, numberSelectedCount),
+                    createCard(21, 25, _onNumberTap, numberSelectedCount,
+                        ballController),
                   ],
                 ),
               ),
@@ -175,21 +182,22 @@ Widget openDataPicker(Function onDateChange) {
 }
 
 Widget createCard(int initialNumber, int endNumber, Function onNumberTap,
-    int numberSelectedCount) {
+    int numberSelectedCount, BallController ballController) {
   return Row(
     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-    children:
-        ballRow(initialNumber, endNumber, onNumberTap, numberSelectedCount),
+    children: ballRow(initialNumber, endNumber, onNumberTap,
+        numberSelectedCount, ballController),
   );
 }
 
 List<Widget> ballRow(int initialNumber, int endNumber, Function onNumberTap,
-    int numberSelectedCount) {
+    int numberSelectedCount, BallController ballController) {
   List<Widget> balls = new List<Widget>();
   for (int i = initialNumber; i <= endNumber; i++) {
     String ballNumber = NumberUtils().formatBallNumber(i);
 
-    balls.add(Ball(ballNumber, onNumberTap, numberSelectedCount));
+    balls.add(
+        Ball(ballNumber, onNumberTap, numberSelectedCount, ballController));
   }
   return balls;
 }
@@ -204,15 +212,31 @@ void showDialog(BuildContext context, Function onDateChange) {
     pageBuilder: (_, __, ___) {
       return Align(
         alignment: Alignment.bottomCenter,
-        child: Container(
-          height: 300,
-          child: openDataPicker(onDateChange),
-          margin: EdgeInsets.only(bottom: 1, left: 1, right: 1),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(40), topRight: Radius.circular(40)),
-          ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisSize: MainAxisSize.max,
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: <Widget>[
+            Container(
+              height: 350,
+              child: openDataPicker(onDateChange),
+              margin: EdgeInsets.only(bottom: 1, left: 1, right: 1),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(40),
+                    topRight: Radius.circular(40)),
+              ),
+            ),
+            Container(
+              width: double.infinity,
+              child: Text(
+                "MY TEXT",
+                textAlign: TextAlign.right,
+              ),
+              color: Colors.white,
+            )
+          ],
         ),
       );
     },

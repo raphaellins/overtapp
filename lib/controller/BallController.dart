@@ -1,25 +1,28 @@
 import 'package:rxdart/rxdart.dart';
 
-class BallController {
-  bool initialState = true;
+enum BallStateEnum { INITIATED, RESET }
 
-  BehaviorSubject<bool> _subjectBallEnabled;
+class BallController {
+  BallStateEnum ballState = BallStateEnum.INITIATED;
+
+  BehaviorSubject<BallStateEnum> _subjectBallEnabled;
 
   BallController() {
-    _subjectBallEnabled = new BehaviorSubject<bool>.seeded(this.initialState);
+    _subjectBallEnabled =
+        new BehaviorSubject<BallStateEnum>.seeded(this.ballState);
   }
 
-  ValueStream<bool> get counterObservable => _subjectBallEnabled.stream;
-
-  void enable() {
-    _subjectBallEnabled.sink.add(true);
-  }
-
-  void disable() {
-    _subjectBallEnabled.sink.add(false);
-  }
+  ValueStream<BallStateEnum> get counterObservable =>
+      _subjectBallEnabled.stream;
 
   void dispose() {
     _subjectBallEnabled.close();
   }
+
+  void reset() {
+    _subjectBallEnabled.sink.add(BallStateEnum.RESET);
+    _subjectBallEnabled.sink.add(BallStateEnum.INITIATED);
+  }
+
+  void initiate() {}
 }

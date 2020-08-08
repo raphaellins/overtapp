@@ -76,8 +76,6 @@ class _GamePageState extends State<GamePage> {
 
     bool result = await new Proxy().saveNewGame(newGame);
 
-    ballController.disable();
-
     if (result) {
       _changeMessage("");
       _clearControllers();
@@ -99,10 +97,9 @@ class _GamePageState extends State<GamePage> {
     finalGameController.clear();
     descriptionGameController.clear();
 
-    // setState(() {
-    //   numberSelectedCount = 0;
-    //   numbersSelected.clear();
-    // });
+    ballController.reset();
+    numberSelectedCount = 0;
+    numbersSelected.clear();
   }
 
   @override
@@ -144,31 +141,31 @@ class _GamePageState extends State<GamePage> {
               SizedBox(
                 height: 70,
               ),
-              StreamBuilder(
-                  stream: ballController.counterObservable,
-                  builder: (context, AsyncSnapshot<bool> snapshot) {
-                    return Text('${snapshot.data}');
-                  }),
               Container(
                 child: Column(
                   children: <Widget>[
-                    createCard(1, 5, _onNumberTap, numberSelectedCount),
+                    createCard(1, 5, _onNumberTap, numberSelectedCount,
+                        ballController),
                     SizedBox(
                       height: 5,
                     ),
-                    createCard(6, 10, _onNumberTap, numberSelectedCount),
+                    createCard(6, 10, _onNumberTap, numberSelectedCount,
+                        ballController),
                     SizedBox(
                       height: 5,
                     ),
-                    createCard(11, 15, _onNumberTap, numberSelectedCount),
+                    createCard(11, 15, _onNumberTap, numberSelectedCount,
+                        ballController),
                     SizedBox(
                       height: 5,
                     ),
-                    createCard(16, 20, _onNumberTap, numberSelectedCount),
+                    createCard(16, 20, _onNumberTap, numberSelectedCount,
+                        ballController),
                     SizedBox(
                       height: 5,
                     ),
-                    createCard(21, 25, _onNumberTap, numberSelectedCount),
+                    createCard(21, 25, _onNumberTap, numberSelectedCount,
+                        ballController),
                   ],
                 ),
               ),
@@ -188,21 +185,22 @@ class _GamePageState extends State<GamePage> {
 }
 
 Widget createCard(int initialNumber, int endNumber, Function onNumberTap,
-    int numberSelectedCount) {
+    int numberSelectedCount, ballController) {
   return Row(
     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-    children:
-        ballRow(initialNumber, endNumber, onNumberTap, numberSelectedCount),
+    children: ballRow(initialNumber, endNumber, onNumberTap,
+        numberSelectedCount, ballController),
   );
 }
 
 List<Widget> ballRow(int initialNumber, int endNumber, Function onNumberTap,
-    int numberSelectedCount) {
+    int numberSelectedCount, ballController) {
   List<Widget> balls = new List<Widget>();
   for (int i = initialNumber; i <= endNumber; i++) {
     String ballNumber = NumberUtils().formatBallNumber(i);
 
-    balls.add(Ball(ballNumber, onNumberTap, numberSelectedCount));
+    balls.add(
+        Ball(ballNumber, onNumberTap, numberSelectedCount, ballController));
   }
   return balls;
 }

@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:overtapp/controller/BallController.dart';
 
 class Ball extends StatefulWidget {
   final String ballNumber;
   final Function onNumberTap;
   final int numberSelectedCount;
+  final BallController ballController;
 
-  Ball(this.ballNumber, this.onNumberTap, this.numberSelectedCount);
+  Ball(this.ballNumber, this.onNumberTap, this.numberSelectedCount,
+      this.ballController);
 
   @override
   _BallState createState() => _BallState();
@@ -30,6 +33,14 @@ class _BallState extends State<Ball> {
 
   @override
   Widget build(BuildContext context) {
+    widget.ballController.counterObservable
+        .distinct()
+        .listen((BallStateEnum ballState) {
+      if (ballState == BallStateEnum.RESET) {
+        color = Colors.white;
+      }
+    });
+
     return Container(
       width: 55,
       height: 55,
