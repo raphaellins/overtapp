@@ -31,7 +31,9 @@ class _BallState extends State<Ball> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(5),
+      width: 55,
+      height: 55,
+      padding: const EdgeInsets.all(10),
       decoration: BoxDecoration(
         border: Border.all(),
         color: color,
@@ -39,10 +41,11 @@ class _BallState extends State<Ball> {
       ),
       child: GestureDetector(
         onTap: _onTapButton,
-        child: new Text(
+        child: Center(
+            child: Text(
           widget.ballNumber,
           style: TextStyle(color: Colors.black, fontSize: 25),
-        ),
+        )),
       ),
     );
   }

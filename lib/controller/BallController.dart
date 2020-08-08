@@ -1,7 +1,7 @@
 import 'package:rxdart/rxdart.dart';
 
 class BallController {
-  bool initialState = false;
+  bool initialState = true;
 
   BehaviorSubject<bool> _subjectBallEnabled;
 

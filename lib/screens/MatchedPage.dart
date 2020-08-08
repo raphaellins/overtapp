@@ -103,15 +103,18 @@ Widget sortedBalls(GameDetail gameDetail) {
 
 Widget ball(String ballNumber, {matched = false}) {
   return Container(
+    width: 24,
+    height: 24,
     padding: const EdgeInsets.all(2),
     decoration: BoxDecoration(
       border: Border.all(),
       color: matched ? Colors.green : Colors.white,
       borderRadius: BorderRadius.all(Radius.circular(50)),
     ),
-    child: new Text(
+    child: Center(
+        child: Text(
       "$ballNumber",
       style: TextStyle(color: matched ? Colors.white : Colors.black),
-    ),
+    )),
   );
 }
