@@ -98,7 +98,9 @@ Widget gameDetailItem(
               Text(gameDetail.gameDescription == null
                   ? ""
                   : gameDetail.gameDescription),
-              Text(gameDetail.countMatched.toString())
+              Text(gameDetail.countMatched == null
+                  ? ""
+                  : gameDetail.countMatched.toString())
             ],
           ),
           Divider(

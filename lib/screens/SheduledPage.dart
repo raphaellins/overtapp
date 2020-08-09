@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:overtapp/api/Auth.dart';
 import 'package:overtapp/api/Proxy.dart';
@@ -98,7 +99,9 @@ Widget gameDetailItem(
               Text(gameDetail.gameDescription == null
                   ? ""
                   : gameDetail.gameDescription),
-              Text(gameDetail.countMatched.toString())
+              Text(gameDetail.countMatched == null
+                  ? ""
+                  : gameDetail.countMatched.toString())
             ],
           ),
           Divider(
