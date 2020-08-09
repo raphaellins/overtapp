@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:overtapp/api/Auth.dart';
 import 'package:overtapp/api/Proxy.dart';
 import 'package:overtapp/models/GameDetail.dart';
+import 'package:provider/provider.dart';
 
 class MatchedPage extends StatefulWidget {
   @override
@@ -17,12 +19,15 @@ class _MatchedPageState extends State<MatchedPage> {
   }
 
   Future<void> _retrieveData() async {
-    List<GameDetail> responseGames = await new Proxy().getGames();
+    try {
+      List<GameDetail> responseGames = await new Proxy().getGames();
 
-    print("${responseGames.length} COUNT");
-    setState(() {
-      _games = responseGames;
-    });
+      setState(() {
+        _games = responseGames;
+      });
+    } catch (err) {
+      Provider.of<AuthService>(context).logout();
+    }
 
     return;
   }

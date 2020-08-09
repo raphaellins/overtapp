@@ -19,10 +19,11 @@ class AuthService with ChangeNotifier {
     return Future.value(_currentUser);
   }
 
-  Future logout() async {
-    var result = Future.value();
+  logout() async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    preferences.setString("overtapptoken", "");
+    _currentUser.userState = UserStateEnum.EMPTY;
     notifyListeners();
-    return result;
   }
 
   Future<UserState> loginUser({String email, String password}) async {
@@ -36,6 +37,8 @@ class AuthService with ChangeNotifier {
 
       SharedPreferences preferences = await SharedPreferences.getInstance();
       preferences.setString("overtapptoken", user.getToken());
+      preferences.setString("overtappuser", user.email);
+      preferences.setString("overtapppassword", user.password);
 
       this._currentUser.user = user;
       _currentUser.userState = UserStateEnum.LOGGED;

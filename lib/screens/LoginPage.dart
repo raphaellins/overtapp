@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:overtapp/api/Auth.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -8,6 +9,25 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  TextEditingController passwordController = new TextEditingController();
+  TextEditingController emailController = new TextEditingController();
+  @override
+  initState() {
+    super.initState();
+
+    SharedPreferences.getInstance().then((value) => setCredentials(value));
+  }
+
+  setCredentials(preferences) {
+    print(preferences.get("overtapppassword"));
+    print(preferences.get("overtappuser"));
+
+    passwordController.text = preferences.get("overtapppassword");
+    emailController.text = preferences.get("overtappuser");
+    _email = emailController.text;
+    _password = passwordController.text;
+  }
+
   final _formKey = GlobalKey<FormState>();
   String _password;
   String _email;
@@ -30,10 +50,12 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                   SizedBox(height: 20.0),
                   TextFormField(
+                      controller: emailController,
                       onSaved: (value) => _email = value,
                       keyboardType: TextInputType.emailAddress,
                       decoration: InputDecoration(labelText: "Email Address")),
                   TextFormField(
+                      controller: passwordController,
                       onSaved: (value) => _password = value,
                       obscureText: true,
                       decoration: InputDecoration(labelText: "Password")),

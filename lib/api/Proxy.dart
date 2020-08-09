@@ -15,8 +15,7 @@ class Proxy {
   Future<List<GameDetail>> getGames() async {
     var finalUrl = url + "games";
 
-    SharedPreferences preferences = await SharedPreferences.getInstance();
-    bearer += preferences.get("overtapptoken");
+    await addToken();
 
     var response = await http
         .get(finalUrl, headers: {HttpHeaders.authorizationHeader: bearer});
@@ -38,8 +37,7 @@ class Proxy {
     var finalUrl = url + "new-game";
     var requestData = json.encode(newGame);
 
-    SharedPreferences preferences = await SharedPreferences.getInstance();
-    bearer += preferences.get("overtapptoken");
+    await addToken();
 
     var response = await http.post(finalUrl, body: requestData, headers: {
       HttpHeaders.authorizationHeader: bearer,
@@ -53,8 +51,7 @@ class Proxy {
     var finalUrl = url + "new-draw";
     var requestData = json.encode(newDraw);
 
-    SharedPreferences preferences = await SharedPreferences.getInstance();
-    bearer += preferences.get("overtapptoken");
+    await addToken();
 
     var response = await http.post(finalUrl, body: requestData, headers: {
       HttpHeaders.authorizationHeader: bearer,
@@ -78,5 +75,10 @@ class Proxy {
     user.setToken(content["token"]);
 
     return user;
+  }
+
+  addToken() async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    bearer += preferences.get("overtapptoken");
   }
 }
