@@ -32,6 +32,14 @@ class _MatchedPageState extends State<MatchedPage> {
     return;
   }
 
+  _onRemove(gameId) async {
+    bool deleted = await new Proxy().delete(gameId);
+
+    if (deleted) {
+      await _retrieveData();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -45,7 +53,7 @@ class _MatchedPageState extends State<MatchedPage> {
             itemCount: _games == null ? 0 : _games.length,
             itemBuilder: (context, index) {
               GameDetail gameDetail = _games[index];
-              return gameDetailItem(gameDetail);
+              return gameDetailItem(context, gameDetail, _onRemove);
             },
           ),
           onRefresh: _retrieveData),
@@ -53,36 +61,48 @@ class _MatchedPageState extends State<MatchedPage> {
   }
 }
 
-Widget gameDetailItem(GameDetail gameDetail) {
-  return Container(
-    padding: const EdgeInsets.only(left: 8, right: 8, top: 5),
-    decoration: BoxDecoration(
-      border: Border.all(),
-      color: Colors.white,
-      borderRadius: BorderRadius.all(Radius.circular(5.0)),
-    ),
-    height: 95,
-    child: Column(
-      children: <Widget>[
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: <Widget>[
-            Text(gameDetail.gameNumber),
-            Text(gameDetail.gameDescription == null
-                ? ""
-                : gameDetail.gameDescription),
-            Text(gameDetail.countMatched.toString())
-          ],
-        ),
-        Divider(
-          color: Colors.black,
-        ),
-        playedBalls(gameDetail.numbersPlayed),
-        SizedBox(
-          height: 5,
-        ),
-        sortedBalls(gameDetail)
-      ],
+Widget gameDetailItem(
+    BuildContext context, GameDetail gameDetail, Function onRemove) {
+  return Dismissible(
+    key: Key(gameDetail.gameId),
+    direction: DismissDirection.endToStart,
+    onDismissed: (direction) {
+      onRemove(gameDetail.gameId);
+
+      Scaffold.of(context).showSnackBar(
+          SnackBar(content: Text("Game ${gameDetail.gameNumber} deleted")));
+    },
+    background: Container(color: Colors.red),
+    child: Container(
+      padding: const EdgeInsets.only(left: 8, right: 8, top: 5),
+      decoration: BoxDecoration(
+        border: Border.all(),
+        color: Colors.white,
+        borderRadius: BorderRadius.all(Radius.circular(5.0)),
+      ),
+      height: 95,
+      child: Column(
+        children: <Widget>[
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              Text(gameDetail.gameNumber),
+              Text(gameDetail.gameDescription == null
+                  ? ""
+                  : gameDetail.gameDescription),
+              Text(gameDetail.countMatched.toString())
+            ],
+          ),
+          Divider(
+            color: Colors.black,
+          ),
+          playedBalls(gameDetail.numbersPlayed),
+          SizedBox(
+            height: 5,
+          ),
+          sortedBalls(gameDetail)
+        ],
+      ),
     ),
   );
 }

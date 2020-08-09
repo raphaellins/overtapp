@@ -61,6 +61,17 @@ class Proxy {
     return response.statusCode == 200;
   }
 
+  Future<bool> delete(String gameId) async {
+    var finalUrl = url + "game/" + gameId;
+    await addToken();
+    var response = await http.delete(finalUrl, headers: {
+      HttpHeaders.authorizationHeader: bearer,
+      HttpHeaders.contentTypeHeader: "application/json; charset=utf-8"
+    });
+
+    return response.statusCode == 200;
+  }
+
   Future<User> login(User user) async {
     var finalUrl = url + "login";
     var requestData = json.encode(user);
