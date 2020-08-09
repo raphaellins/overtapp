@@ -82,7 +82,7 @@ class _DrawPageState extends State<DrawPage> {
 
   _clearControllers() {
     drawNumberController.clear();
-    gameDateController.clear();
+    gameDateController.text = DateFormat('dd/MM/yyyy').format(DateTime.now());
 
     ballController.reset();
     numberSelectedCount = 0;

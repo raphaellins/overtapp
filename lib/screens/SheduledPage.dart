@@ -4,13 +4,13 @@ import 'package:overtapp/api/Proxy.dart';
 import 'package:overtapp/models/GameDetail.dart';
 import 'package:provider/provider.dart';
 
-class MatchedPage extends StatefulWidget {
+class SheduledPage extends StatefulWidget {
   @override
-  _MatchedPageState createState() => _MatchedPageState();
+  _SheduledPageState createState() => _SheduledPageState();
 }
 
-class _MatchedPageState extends State<MatchedPage> {
-  List<GameDetail> _matchedGames;
+class _SheduledPageState extends State<SheduledPage> {
+  List<GameDetail> _scheduledGames;
 
   @override
   void initState() {
@@ -25,12 +25,12 @@ class _MatchedPageState extends State<MatchedPage> {
       List<GameDetail> copyData = responseGames;
 
       copyData.sort(
-          (GameDetail a, GameDetail b) => b.gameNumber.compareTo(a.gameNumber));
+          (GameDetail a, GameDetail b) => a.gameNumber.compareTo(b.gameNumber));
 
       setState(() {
-        _matchedGames = copyData
+        _scheduledGames = copyData
             .where(
-                (GameDetail gameDetail) => gameDetail.numbersDrawn.length > 0)
+                (GameDetail gameDetail) => gameDetail.numbersDrawn.length == 0)
             .toList();
       });
     } catch (err) {
@@ -58,9 +58,9 @@ class _MatchedPageState extends State<MatchedPage> {
               color: Colors.transparent,
               height: 5,
             ),
-            itemCount: _matchedGames == null ? 0 : _matchedGames.length,
+            itemCount: _scheduledGames == null ? 0 : _scheduledGames.length,
             itemBuilder: (context, index) {
-              GameDetail gameDetail = _matchedGames[index];
+              GameDetail gameDetail = _scheduledGames[index];
               return gameDetailItem(context, gameDetail, _onRemove);
             },
           ),

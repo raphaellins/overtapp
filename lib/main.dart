@@ -5,6 +5,7 @@ import 'package:overtapp/screens/DrawPage.dart';
 import 'package:overtapp/screens/GamePage.dart';
 import 'package:overtapp/screens/LoginPage.dart';
 import 'package:overtapp/screens/MatchedPage.dart';
+import 'package:overtapp/screens/SheduledPage.dart';
 import 'package:provider/provider.dart';
 
 void main() => runApp(ChangeNotifierProvider<AuthService>(
@@ -62,6 +63,15 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
     super.initState();
 
     _items = [
+      new AppPage(
+          icon: new Icon(Icons.check_box_outline_blank),
+          title: new Text(
+            'Sheduled',
+            style: TextStyle(color: Colors.white),
+          ),
+          color: Color.fromRGBO(26, 26, 25, 1),
+          body: new SheduledPage(),
+          vsync: this),
       new AppPage(
           icon: new Icon(Icons.check_box),
           title: new Text(
