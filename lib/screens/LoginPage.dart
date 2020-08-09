@@ -19,9 +19,6 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   setCredentials(preferences) {
-    print(preferences.get("overtapppassword"));
-    print(preferences.get("overtappuser"));
-
     passwordController.text = preferences.get("overtapppassword");
     emailController.text = preferences.get("overtappuser");
     _email = emailController.text;

@@ -22,8 +22,6 @@ class Proxy {
 
     final responseJson = json.decode(response.body);
 
-    print("=========> STATUS CODE ${response.statusCode}");
-
     List<GameDetail> gamesDetail = new List<GameDetail>();
 
     for (Map<String, dynamic> gameDetail in responseJson) {

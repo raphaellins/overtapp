@@ -5,7 +5,6 @@ import 'package:overtapp/api/Proxy.dart';
 import 'package:overtapp/controller/BallController.dart';
 import 'package:overtapp/elements/Ball.dart';
 import 'package:overtapp/models/NewDraw.dart';
-import 'package:overtapp/models/NewGame.dart';
 import 'package:overtapp/utils/NumberUtils.dart';
 
 class DrawPage extends StatefulWidget {
@@ -35,6 +34,10 @@ class _DrawPageState extends State<DrawPage> {
 
   TextEditingController drawNumberController = new TextEditingController();
   TextEditingController gameDateController = new TextEditingController();
+
+  _DrawPageState() {
+    gameDateController.text = DateFormat('dd/MM/yyyy').format(DateTime.now());
+  }
 
   _onFormSubmit() async {
     FocusScope.of(context).unfocus();
@@ -230,9 +233,18 @@ void showDialog(BuildContext context, Function onDateChange) {
             ),
             Container(
               width: double.infinity,
-              child: Text(
-                "MY TEXT",
-                textAlign: TextAlign.right,
+              padding: EdgeInsets.only(right: 25),
+              child: FlatButton(
+                child: Align(
+                  alignment: Alignment.bottomRight,
+                  child: Text(
+                    "Done",
+                    textAlign: TextAlign.right,
+                  ),
+                ),
+                onPressed: () {
+                  Navigator.pop(context);
+                },
               ),
               color: Colors.white,
             )

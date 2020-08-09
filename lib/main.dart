@@ -10,7 +10,6 @@ import 'package:provider/provider.dart';
 void main() => runApp(ChangeNotifierProvider<AuthService>(
     child: MyApp(),
     builder: (BuildContext context) {
-      print("===> Auth service Provider");
       return AuthService();
     }));
 

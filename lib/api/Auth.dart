@@ -28,8 +28,6 @@ class AuthService with ChangeNotifier {
 
   Future<UserState> loginUser({String email, String password}) async {
     try {
-      print("===> Login user");
-
       _currentUser.userState = UserStateEnum.PROCESSING;
       notifyListeners();
 
