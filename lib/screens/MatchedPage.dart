@@ -88,19 +88,31 @@ Widget gameDetailItem(
         color: Colors.white,
         borderRadius: BorderRadius.all(Radius.circular(5.0)),
       ),
-      height: 95,
+      height: 96,
       child: Column(
         children: <Widget>[
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
-              Text(gameDetail.gameNumber),
-              Text(gameDetail.gameDescription == null
-                  ? ""
-                  : gameDetail.gameDescription),
-              Text(gameDetail.countMatched == null
-                  ? ""
-                  : gameDetail.countMatched.toString())
+              Center(
+                  child: Text(
+                gameDetail.gameNumber,
+                style: TextStyle(fontSize: 14),
+              )),
+              Center(
+                  child: Text(
+                gameDetail.gameDescription == null
+                    ? ""
+                    : gameDetail.gameDescription,
+                style: TextStyle(fontSize: 14),
+              )),
+              Center(
+                  child: Text(
+                gameDetail.countMatched == null
+                    ? ""
+                    : gameDetail.countMatched.toString(),
+                style: TextStyle(fontSize: 14),
+              ))
             ],
           ),
           Divider(

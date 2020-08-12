@@ -72,9 +72,9 @@ flutter:
   fonts:
     - family: Lato
       fonts:
-        - asset: fonts/Lato/Lato-Regular.ttf
+        # - asset: fonts/Lato/Lato-Regular.ttf
         - asset: fonts/Lato/Lato-Light.ttf
-          style: regular
+          # style: regular
   #   - family: Trajan Pro
   #     fonts:
   #       - asset: fonts/TrajanPro.ttf
