@@ -32,50 +32,56 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: Text("Login Page Flutter Firebase"),
+        body: Center(
+      child: Container(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Container(
+                padding: EdgeInsets.all(20.0),
+                child: Form(
+                    key: _formKey,
+                    child: Column(children: <Widget>[
+                      SizedBox(height: 20.0),
+                      Text(
+                        'Login',
+                        style: TextStyle(fontSize: 20),
+                      ),
+                      SizedBox(height: 20.0),
+                      TextFormField(
+                          controller: emailController,
+                          onSaved: (value) => _email = value,
+                          keyboardType: TextInputType.emailAddress,
+                          decoration:
+                              InputDecoration(labelText: "Email Address")),
+                      TextFormField(
+                          controller: passwordController,
+                          onSaved: (value) => _password = value,
+                          obscureText: true,
+                          decoration: InputDecoration(labelText: "Password")),
+                      SizedBox(height: 20.0),
+                      RaisedButton(
+                        child: Text("LOGIN"),
+                        onPressed: () async {
+                          final form = _formKey.currentState;
+                          form.save();
+                          if (form.validate()) {
+                            try {
+                              await Provider.of<AuthService>(context).loginUser(
+                                  email: _email, password: _password);
+                            } on Exception catch (error) {
+                              return _buildErrorDialog(
+                                  context, error.toString());
+                            }
+                          }
+                        },
+                      )
+                    ])))
+          ],
         ),
-        body: Container(
-            padding: EdgeInsets.all(20.0),
-            child: Form(
-                key: _formKey,
-                child: Column(children: <Widget>[
-                  SizedBox(height: 20.0),
-                  Text(
-                    'Login Information',
-                    style: TextStyle(fontSize: 20),
-                  ),
-                  SizedBox(height: 20.0),
-                  TextFormField(
-                      controller: emailController,
-                      onSaved: (value) => _email = value,
-                      keyboardType: TextInputType.emailAddress,
-                      decoration: InputDecoration(labelText: "Email Address")),
-                  TextFormField(
-                      controller: passwordController,
-                      onSaved: (value) => _password = value,
-                      obscureText: true,
-                      decoration: InputDecoration(labelText: "Password")),
-                  SizedBox(height: 20.0),
-                  RaisedButton(
-                    child: Text("LOGIN"),
-                    onPressed: () async {
-                      // save the fields..
-                      final form = _formKey.currentState;
-                      form.save();
-
-                      // Validate will return true if is valid, or false if invalid.
-                      if (form.validate()) {
-                        try {
-                          await Provider.of<AuthService>(context)
-                              .loginUser(email: _email, password: _password);
-                        } on Exception catch (error) {
-                          return _buildErrorDialog(context, error.toString());
-                        }
-                      }
-                    },
-                  )
-                ]))));
+      ),
+    ));
   }
 
   Future _buildErrorDialog(BuildContext context, _message) {
