@@ -17,6 +17,7 @@ class GameDetail {
       this.numbersPlayed});
 
   factory GameDetail.fromJson(Map<String, dynamic> json) {
+    print(json['countMatched']);
     return GameDetail(
         ballsMatched: new List<String>.from(['ballsMatched']),
         countMatched: json['countMatched'],

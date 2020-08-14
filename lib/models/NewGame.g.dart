@@ -8,8 +8,8 @@ part of 'NewGame.dart';
 
 NewGame _$NewGameFromJson(Map<String, dynamic> json) {
   return NewGame(
-    json['initialGameNumber'] as String,
-    json['finalGameNumber'] as String,
+    json['initialGameNumber'] as int,
+    json['finalGameNumber'] as int,
     json['gameDescription'] as String,
     (json['numbersPlayed'] as List)?.map((e) => e as String)?.toList(),
   );

@@ -4,7 +4,7 @@ part 'NewDraw.g.dart';
 
 @JsonSerializable()
 class NewDraw {
-  String drawNumber;
+  int drawNumber;
   List<String> numbersDrawn;
   String drawDate;
 

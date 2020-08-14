@@ -8,7 +8,7 @@ part of 'NewDraw.dart';
 
 NewDraw _$NewDrawFromJson(Map<String, dynamic> json) {
   return NewDraw(
-    json['drawNumber'] as String,
+    json['drawNumber'] as int,
     json['drawDate'] as String,
     (json['numbersDrawn'] as List)?.map((e) => e as String)?.toList(),
   );

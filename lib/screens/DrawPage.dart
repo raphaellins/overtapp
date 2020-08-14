@@ -41,13 +41,13 @@ class _DrawPageState extends State<DrawPage> {
 
   _onFormSubmit() async {
     FocusScope.of(context).unfocus();
-    NewDraw newDraw = new NewDraw(
-        drawNumberController.text, gameDateController.text, numbersSelected);
+    NewDraw newDraw = new NewDraw(int.tryParse(drawNumberController.text),
+        gameDateController.text, numbersSelected);
 
-    if (newDraw.drawNumber.isEmpty) {
+    if (newDraw.drawNumber == null) {
       _changeMessage("Draw Number is required");
       return;
-    } else if (int.tryParse(newDraw.drawNumber) == null) {
+    } else if (newDraw.drawNumber <= 0) {
       _changeMessage("Draw Number is invalid");
       return;
     }

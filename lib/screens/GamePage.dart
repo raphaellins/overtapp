@@ -37,29 +37,28 @@ class _GamePageState extends State<GamePage> {
   _onFormSubmit() async {
     FocusScope.of(context).unfocus();
     NewGame newGame = new NewGame(
-        initialGameController.text,
-        finalGameController.text,
+        int.tryParse(initialGameController.text),
+        int.tryParse(finalGameController.text),
         descriptionGameController.text,
         numbersSelected);
 
-    if (newGame.initialGameNumber.isEmpty) {
+    if (newGame.initialGameNumber == null) {
       _changeMessage("Initial Game Number is required");
       return;
-    } else if (int.tryParse(newGame.initialGameNumber) == null) {
+    } else if (newGame.initialGameNumber <= 0) {
       _changeMessage("Initial Game Number is invalid");
       return;
     }
 
-    if (newGame.finalGameNumber.isEmpty) {
+    if (newGame.finalGameNumber == null) {
       _changeMessage("Final Game Number is required");
       return;
-    } else if (int.tryParse(newGame.finalGameNumber) == null) {
+    } else if (newGame.finalGameNumber <= 0) {
       _changeMessage("Final Game Number is invalid");
       return;
     }
 
-    if (int.parse(newGame.initialGameNumber) >
-        int.parse(newGame.finalGameNumber)) {
+    if (newGame.initialGameNumber > newGame.finalGameNumber) {
       _changeMessage("The Final Number must be less than Initial Game Number");
       return;
     }

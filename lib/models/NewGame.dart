@@ -4,8 +4,8 @@ part 'NewGame.g.dart';
 
 @JsonSerializable()
 class NewGame {
-  final String initialGameNumber;
-  final String finalGameNumber;
+  final int initialGameNumber;
+  final int finalGameNumber;
   final String gameDescription;
   final List<String> numbersPlayed;
 
