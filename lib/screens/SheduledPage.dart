@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:overtapp/api/Auth.dart';
 import 'package:overtapp/api/Proxy.dart';
 import 'package:overtapp/models/GameDetail.dart';
+import 'package:overtapp/models/NewGame.dart';
 import 'package:provider/provider.dart';
 
 class SheduledPage extends StatefulWidget {
@@ -41,12 +42,21 @@ class _SheduledPageState extends State<SheduledPage> {
     return;
   }
 
-  _onRemove(gameId) async {
-    bool deleted = await new Proxy().delete(gameId);
+  _onRemove(GameDetail gameDetail) async {
+    bool deleted = await new Proxy().delete(gameDetail.gameId);
 
     if (deleted) {
       await _retrieveData();
     }
+  }
+
+  _onDuplicate(GameDetail gameDetail, int gameNumber) async {
+    NewGame newGame = new NewGame(gameNumber, gameNumber,
+        gameDetail.gameDescription, gameDetail.numbersPlayed);
+
+    await new Proxy().saveNewGame(newGame);
+
+    await _retrieveData();
   }
 
   @override
@@ -62,7 +72,8 @@ class _SheduledPageState extends State<SheduledPage> {
             itemCount: _scheduledGames == null ? 0 : _scheduledGames.length,
             itemBuilder: (context, index) {
               GameDetail gameDetail = _scheduledGames[index];
-              return gameDetailItem(context, gameDetail, _onRemove);
+              return gameDetailItem(
+                  context, gameDetail, _onRemove, _onDuplicate);
             },
           ),
           onRefresh: _retrieveData),
@@ -70,18 +81,62 @@ class _SheduledPageState extends State<SheduledPage> {
   }
 }
 
-Widget gameDetailItem(
-    BuildContext context, GameDetail gameDetail, Function onRemove) {
+Widget gameDetailItem(BuildContext context, GameDetail gameDetail,
+    Function onRemove, Function onDuplicate) {
+  int newGameNumber;
   return Dismissible(
     key: Key(gameDetail.gameId),
-    direction: DismissDirection.endToStart,
-    onDismissed: (direction) {
-      onRemove(gameDetail.gameId);
+    confirmDismiss: (direction) async {
+      String operationDescription;
+      if (direction == DismissDirection.endToStart) {
+        operationDescription = "Remove the game ${gameDetail.gameNumber}";
+      } else {
+        operationDescription = "Duplicate the game ${gameDetail.gameNumber}";
+      }
 
-      Scaffold.of(context).showSnackBar(
-          SnackBar(content: Text("Game ${gameDetail.gameNumber} deleted")));
+      return await showDialogOperation(context, operationDescription,
+          (String gameNumber) {
+        newGameNumber = int.tryParse(gameNumber);
+      }, null);
     },
-    background: Container(color: Colors.red),
+    onDismissed: (direction) {
+      String message;
+
+      if (direction == DismissDirection.endToStart) {
+        onRemove(gameDetail);
+        message = "Game ${gameDetail.gameNumber} deleted";
+      } else {
+        onDuplicate(gameDetail, newGameNumber);
+        message = "Game ${gameDetail.gameNumber} duplicated";
+      }
+
+      Scaffold.of(context).showSnackBar(SnackBar(content: Text(message)));
+    },
+    background: Container(
+      color: Colors.blue,
+      child: Align(
+        alignment: Alignment.centerLeft,
+        child: Padding(
+          padding: const EdgeInsets.only(left: 15),
+          child: Text(
+            "Duplicate",
+            style: TextStyle(fontSize: 25, color: Colors.white),
+          ),
+        ),
+      ),
+    ),
+    secondaryBackground: Container(
+        color: Colors.red,
+        child: Align(
+          alignment: Alignment.centerRight,
+          child: Padding(
+            padding: const EdgeInsets.only(right: 15),
+            child: Text(
+              "Remove",
+              style: TextStyle(fontSize: 25, color: Colors.white),
+            ),
+          ),
+        )),
     child: Container(
       padding: const EdgeInsets.only(left: 8, right: 8, top: 5),
       decoration: BoxDecoration(
@@ -157,4 +212,58 @@ Widget ball(String ballNumber, {matched = false}) {
       style: TextStyle(color: matched ? Colors.white : Colors.black),
     )),
   );
+}
+
+showDialogOperation(BuildContext context, String operationDescription,
+    Function onConfirmAction, Function onCancelAction) {
+  TextEditingController gameNumberController = new TextEditingController();
+
+  bool isDuplicate = operationDescription.contains("Duplicate");
+
+  return showDialog(
+      context: context,
+      builder: (BuildContext context) => CupertinoAlertDialog(
+            title: new Text("Proceed with the action?"),
+            content: Container(
+                child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  new Text(operationDescription),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  isDuplicate
+                      ? CupertinoTextField(
+                          maxLength: 5,
+                          keyboardType: TextInputType.number,
+                          controller: gameNumberController,
+                          placeholder: "Game Number Required",
+                        )
+                      : Container()
+                ],
+              ),
+            )),
+            actions: <Widget>[
+              CupertinoDialogAction(
+                onPressed: () {
+                  if (isDuplicate) {
+                    if (gameNumberController.text.isNotEmpty) {
+                      onConfirmAction(gameNumberController.text);
+                      Navigator.of(context).pop(true);
+                    }
+                  } else {
+                    Navigator.of(context).pop(true);
+                  }
+                },
+                isDefaultAction: true,
+                child: Text("Confirm"),
+              ),
+              CupertinoDialogAction(
+                onPressed: () {
+                  Navigator.of(context).pop(false);
+                },
+                child: Text("Cancel"),
+              )
+            ],
+          ));
 }
