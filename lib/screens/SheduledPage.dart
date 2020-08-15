@@ -84,6 +84,12 @@ class _SheduledPageState extends State<SheduledPage> {
 Widget gameDetailItem(BuildContext context, GameDetail gameDetail,
     Function onRemove, Function onDuplicate) {
   int newGameNumber;
+  String gameNumber = gameDetail.gameNumber.toString();
+  String gameDescription =
+      gameDetail.gameDescription == null ? "" : gameDetail.gameDescription;
+
+  print(gameNumber);
+  print(gameDescription);
   return Dismissible(
     key: Key(gameDetail.gameId),
     confirmDismiss: (direction) async {
@@ -140,34 +146,31 @@ Widget gameDetailItem(BuildContext context, GameDetail gameDetail,
     child: Container(
       padding: const EdgeInsets.only(left: 8, right: 8, top: 5),
       decoration: BoxDecoration(
-        border: Border.all(),
+        border: Border.all(color: Colors.white),
         color: Colors.white,
         borderRadius: BorderRadius.all(Radius.circular(5.0)),
       ),
       height: 95,
-      child: Column(
-        children: <Widget>[
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
-              Text(gameDetail.gameNumber),
-              Text(gameDetail.gameDescription == null
-                  ? ""
-                  : gameDetail.gameDescription),
-              Text(gameDetail.countMatched == null
-                  ? ""
-                  : gameDetail.countMatched.toString())
-            ],
-          ),
-          Divider(
-            color: Colors.black,
-          ),
-          playedBalls(gameDetail.numbersPlayed),
-          SizedBox(
-            height: 5,
-          ),
-          sortedBalls(gameDetail)
-        ],
+      child: Container(
+        child: Column(
+          children: <Widget>[
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                gameInfo(gameNumber),
+                gameInfo(gameDescription),
+              ],
+            ),
+            Divider(
+              color: Colors.black,
+            ),
+            playedBalls(gameDetail.numbersPlayed),
+            SizedBox(
+              height: 5,
+            ),
+            sortedBalls(gameDetail)
+          ],
+        ),
       ),
     ),
   );
@@ -212,6 +215,10 @@ Widget ball(String ballNumber, {matched = false}) {
       style: TextStyle(color: matched ? Colors.white : Colors.black),
     )),
   );
+}
+
+Widget gameInfo(String value) {
+  return Text(value, style: TextStyle(color: Colors.black87));
 }
 
 showDialogOperation(BuildContext context, String operationDescription,
