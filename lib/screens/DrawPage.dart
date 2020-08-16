@@ -20,6 +20,7 @@ class _DrawPageState extends State<DrawPage> {
   BallController ballController = new BallController();
 
   _onNumberTap(String ballNumber, bool selected) {
+    FocusScope.of(context).unfocus();
     setState(() {
       if (selected) {
         numbersSelected.add(ballNumber);
@@ -223,7 +224,6 @@ void showDialog(BuildContext context, Function onDateChange) {
             Container(
               height: 350,
               child: openDataPicker(onDateChange),
-              margin: EdgeInsets.only(bottom: 1, left: 1, right: 1),
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.only(
@@ -233,15 +233,10 @@ void showDialog(BuildContext context, Function onDateChange) {
             ),
             Container(
               width: double.infinity,
-              padding: EdgeInsets.only(right: 25),
+              margin: EdgeInsets.only(bottom: 1),
+              padding: EdgeInsets.only(right: 22),
               child: FlatButton(
-                child: Align(
-                  alignment: Alignment.bottomRight,
-                  child: Text(
-                    "Done",
-                    textAlign: TextAlign.right,
-                  ),
-                ),
+                child: actionDetail(),
                 onPressed: () {
                   Navigator.pop(context);
                 },
@@ -258,5 +253,17 @@ void showDialog(BuildContext context, Function onDateChange) {
         child: child,
       );
     },
+  );
+}
+
+Widget actionDetail() {
+  String actionLabel = "Done";
+  return Align(
+    alignment: Alignment.bottomRight,
+    child: Text(
+      actionLabel,
+      textAlign: TextAlign.right,
+      style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+    ),
   );
 }

@@ -73,7 +73,7 @@ Widget gameDetailItem(BuildContext context, GameDetail gameDetail) {
   return Container(
     padding: const EdgeInsets.only(left: 8, right: 8, top: 5),
     decoration: BoxDecoration(
-      border: Border.all(),
+      border: Border.all(color: Colors.white),
       color: Colors.white,
       borderRadius: BorderRadius.all(Radius.circular(5.0)),
     ),

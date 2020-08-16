@@ -18,6 +18,7 @@ class _GamePageState extends State<GamePage> {
   BallController ballController = new BallController();
 
   _onNumberTap(String ballNumber, bool selected) {
+    FocusScope.of(context).unfocus();
     setState(() {
       if (selected) {
         numbersSelected.add(ballNumber);
