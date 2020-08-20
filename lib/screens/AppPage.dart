@@ -3,8 +3,7 @@ import 'package:flutter/material.dart';
 class AppPage {
   AppPage(
       {Widget icon, Text title, Color color, this.body, TickerProvider vsync})
-      : this._icon = icon,
-        this._title = title.data,
+      : this._title = title.data,
         this._color = color,
         this.controller = new AnimationController(
             vsync: vsync, duration: Duration(milliseconds: 300)),
@@ -17,7 +16,6 @@ class AppPage {
         new CurvedAnimation(parent: controller, curve: Curves.fastOutSlowIn);
   }
 
-  final Widget _icon;
   final String _title;
   final Color _color;
   final AnimationController controller;
