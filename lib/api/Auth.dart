@@ -42,9 +42,10 @@ class AuthService with ChangeNotifier {
       _currentUser.userState = UserStateEnum.LOGGED;
       notifyListeners();
 
-      return this._currentUser;
+      return Future.value(this._currentUser);
     } catch (e) {
       print("Error in login $e");
+      return null;
     }
   }
 }

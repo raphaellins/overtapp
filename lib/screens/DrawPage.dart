@@ -263,7 +263,7 @@ Widget actionDetail() {
     child: Text(
       actionLabel,
       textAlign: TextAlign.right,
-      style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+      style: TextStyle(fontWeight: FontWeight.bold, fontSize: 19),
     ),
   );
 }
