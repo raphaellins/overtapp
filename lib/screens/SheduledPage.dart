@@ -36,6 +36,7 @@ class _SheduledPageState extends State<SheduledPage> {
             .toList();
       });
     } catch (err) {
+      print("Session expired");
       Provider.of<AuthService>(context).logout();
     }
 
