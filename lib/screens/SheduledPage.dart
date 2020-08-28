@@ -89,8 +89,6 @@ Widget gameDetailItem(BuildContext context, GameDetail gameDetail,
   String gameDescription =
       gameDetail.gameDescription == null ? "" : gameDetail.gameDescription;
 
-  print(gameNumber);
-  print(gameDescription);
   return Dismissible(
     key: Key(gameDetail.gameId),
     confirmDismiss: (direction) async {

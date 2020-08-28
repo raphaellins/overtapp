@@ -23,6 +23,4 @@ class BallController {
     _subjectBallEnabled.sink.add(BallStateEnum.RESET);
     _subjectBallEnabled.sink.add(BallStateEnum.INITIATED);
   }
-
-  void initiate() {}
 }
